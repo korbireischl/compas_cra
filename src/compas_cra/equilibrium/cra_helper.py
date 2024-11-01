@@ -88,8 +88,10 @@ def external_force_setup(assembly, density, gravity):
     for node in assembly.graph.nodes():
         block = assembly.node_block(node)
         index = key_index[node]
-        p[index][2] = -block.volume() * (block.attributes["density"] if "density" in block.attributes else density) * gravity
-        p[index][2] += -block.attributes["load"] if "load" in block.attributes else 0
+        weight = block.volume() * (block.attributes["density"] if "density" in block.attributes else density)
+        p[index][2] = -weight * gravity
+        load = block.attributes["load"] if "load" in block.attributes else 0
+        p[index][2] += -load
         print(f"{index}: {round(p[index][2],3)}")
 
     p = np.array(p, dtype=float)
